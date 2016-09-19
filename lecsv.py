@@ -1,6 +1,6 @@
 import csv
 import os
-
+import random
 
 
 
@@ -78,7 +78,7 @@ class solver(object):
                 value = value + self.mat[type][list[i].type]
         return value
             
-    def filt(self,listP,             
+    def filt(self,listP):             
         listPB = []
         for k in range(len(listP)):
             if (listP[k].lch[i] == 1):
@@ -91,7 +91,7 @@ class solver(object):
 
 def searchacti(code,actis):
     k = 0
-    for i in range len(actis):
+    for i in range (len(actis)):
         if code == actis[i].code:
             k = i
     return k
@@ -102,11 +102,10 @@ def zeros(k):
         t.append(0)
     return t
         
-        
 
 #structure provisoire du programme
 
-
+"""
 
 #################PARTIE LECTURE DU FICHIER EXCEL
 
@@ -156,8 +155,37 @@ for i in range(len(percsv)):
     
 print("liste de personnes et d'activités initialisée")
 
+"""
 
+mat = [[10,5,2],[5,10,2],[5,2,10]]
+
+alph = ["a","b","c","d","e","f","g","h","i"]
+
+# on genere 100 personnes aléatoires -- avec 10 actis -- dont 3 types
+
+listP = []
+listT = []
+
+for i in range (100):
+    nom = alph[random.randint(0,8)] + alph[random.randint(0,8)] + alph[random.randint(0,8)]
+    lch = []
+    for i in range (10):
+        lch.append(random.randint(0,1))
+    listP.append(person(nom,"",lch))
     
+#personnes générées
+
+listT.append(acti("AZE",0,1))
+listT.append(acti("AZR",0,10))
+listT.append(acti("AZF",1,5))
+listT.append(acti("AZK",1,3))
+listT.append(acti("AZA",2,1))
+listT.append(acti("BZE",0,7))
+listT.append(acti("BZR",0,8))
+listT.append(acti("BZF",1,9))
+listT.append(acti("BZK",1,1))
+listT.append(acti("BZA",2,1))
+
     
     
 
