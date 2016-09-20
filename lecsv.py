@@ -37,7 +37,7 @@ class solver(object):
         #on parcoure chaque tâche séparément
         for i in range(len(listA)):
             task = listA[i]
-            self.calcscore(task)
+            self.calcscore(task,listP)
             listelig = self.filt(listP,i)
             for j in range(task.capacity):
                 task.listPrincipale.append(listelig[j])
@@ -47,10 +47,15 @@ class solver(object):
             #liste d'attente à trier aussi !!!!!!!
             task.listAttente = listelig[task.capacity+1:]
             
-                
+        #tri de liste d'attente 
+        for i in range(len(listA)):
+            task = listA[i]
+            self.calcscore(task,task.listAttente)
+            
         
-    def calcscore(self,task):
-        listP = self.listP
+        
+    def calcscore(self,task,liste):
+        listP = liste
         type = task.type
         score = []
         
@@ -85,7 +90,22 @@ class solver(object):
                 listPB . append(listP[k])
         return listPB
         
-
+    def comparetime(self,time1,time2):
+        #temps au format hh:mm
+        #temps sous fore de string
+        #Si la fonction retourne 1 ca veut dire que time1 > time2
+        
+        if (int(time1[0]+time1[1]) > int(time2[0]+time2[1])):
+            return 1
+        elif (int(time1[0]+time1[1]) == int(time2[0]+time2[1])):
+            if (int(time1[3]+time1[4]) >= int(time2[3]+time2[4])):
+                return 1
+            else:
+                return 0
+        else:
+            return 0
+            
+        
 
 
 
@@ -161,6 +181,9 @@ mat = [[10,5,2],[5,10,2],[5,2,10]]
 
 alph = ["a","b","c","d","e","f","g","h","i"]
 
+
+
+#PARTIE TEST !!!
 # on genere 100 personnes aléatoires -- avec 10 actis -- dont 3 types
 
 listP = []
@@ -192,7 +215,10 @@ solvera.solve()
 
 for i in range(10):
     print(listT[1].listPrincipale[i].name, listT[1].listPrincipale[i].lch)
-    
+
+#pourcentage de personnes ? 
+
+#PROGRAMME CORRECTEMENT DEBUGUE
     
 
 
