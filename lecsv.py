@@ -45,7 +45,7 @@ class solver(object):
                 listP[k].lres[i] = 1
                 
             #liste d'attente à trier aussi !!!!!!!
-            task.listAttente = listelig[capacity+1:]
+            task.listAttente = listelig[task.capacity+1:]
             
                 
         
@@ -67,18 +67,18 @@ class solver(object):
                 if (score[k]>score[j]):
                     k = j
                 score[k], score[j] = score[j], score[k] 
-                listP[k],list[j] = listP[j],listP[k]
+                listP[k],listP[j] = listP[j],listP[k]
                 
     def calcscoreP(self, personE, type):
-        listR = personE.lres
-        listT = self.listT
+        lres = personE.lres
+        listT = self.listA
         value = 0
-        for i in range(lres):
+        for i in range(len(lres)):
             if (lres[i] == 1):
-                value = value + self.mat[type][list[i].type]
+                value = value + self.mat[type][listT[i].type]
         return value
             
-    def filt(self,listP):             
+    def filt(self,listP,i):             
         listPB = []
         for k in range(len(listP)):
             if (listP[k].lch[i] == 1):
@@ -186,6 +186,12 @@ listT.append(acti("BZF",1,9))
 listT.append(acti("BZK",1,1))
 listT.append(acti("BZA",2,1))
 
+solvera = solver(listP,listT,mat)
+
+solvera.solve()
+
+for i in range(10):
+    print(listT[1].listPrincipale[i].name, listT[1].listPrincipale[i].lch)
     
     
 
