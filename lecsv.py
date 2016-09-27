@@ -6,11 +6,11 @@ import random
 
 class person(object):
     #temps à mettre ici
-    def __init__(self,name,lastname,promo):
+    def __init__(self,name,lastname,lch,promo):
         self.name = name
-        self.ladtname = lastname
+        self.lastname = lastname
 ########### MODIFICATION IMPORTANTE, LCH RENFERME LES INDICES DES TACHES CHOSIIES ET NON PLUS DES 001100// PAS FORCEMENT
-        self.lch = []
+        self.lch = lch
         self.lres = zeros(len(lch))
         self.promo = promo
 
@@ -21,14 +21,14 @@ class acti(object):
         self.entreprise = entreprise
         self.intNom = intNom
         self.intPrenom = intPrenom
-        self.creneau = self.creneau
-        self.tabIndice= []
+        self.creneau = creneau
+        #self.tabIndice= []
         
         #self.code = code
         self.capacity = capacity
         self.listPrincipale = []
         self.listAttente = []
-        self.tabIndice = tabIndice
+        #self.tabIndice = tabIndice
         
     def genereCode(self):
         #generation de code
@@ -36,7 +36,7 @@ class acti(object):
         #partie créneau
         cre = stringToList(self.creneau)
         i = cre.index(":")
-        code = code + cre[i-2]+cre[i-1]+cre[i+1]+cre[i+2]
+        code = code + cre[0] + cre[1] + cre[i-2]+cre[i-1]+cre[i+1]+cre[i+2]
         i = cre.index("(")
         code = code + cre[i+1] + cre[i+2]
         self.code = code
@@ -156,6 +156,19 @@ def zeros(k):
     for i in range(k):
         t.append(0)
     return t
+    
+def separate(list):
+    r = ""
+    res = []
+    chaine = list[0]
+    for i in range (len(chaine)):
+        if (chaine[i] != ";"):
+            r = r + chaine[i]
+        else:
+            res.append(r)
+            r = ""
+            
+    return res
         
 
 #structure provisoire du programme
@@ -189,6 +202,13 @@ types = ["Discussion projet professionnel","Correction de CV en Français","Corr
 
 for row in cr :
     fichierEx.append(row)
+
+intermed = []
+    
+for i in range (len(fichierEx)):
+    fichierEx[i] = separate(fichierEx[i])
+    
+
     
 listT = []
 listP = []
@@ -197,59 +217,41 @@ listP = []
 for i in range(1,len(fichierEx)):
     
     #d'abord une nomenclature ++ ajout dans la classse d'un tableau avec les lignes de l'activité ++ liste de tute les nomenclatures , risque de doublon ? 
-    tache = acti[fichierEx[i,0],fichierEx[i,1],fichierEx[i,2],fichierEx[i,3],type.index(fichierEx[i,4]),1) ### capacité provisoire !!
+    tache = acti(fichierEx[i][0],fichierEx[i][1],fichierEx[i][2],fichierEx[i][3],types.index(fichierEx[i][9]),1) ### capacité provisoire !!
     tache.genereCode()
+    if(i == 368):
+        print(tache.code)
     
     if (searchacti(tache.code,listT) == -1):
-        k = i
         listT.append(tache)
+        k = len(listT) - 1 
     else:
         k = searchacti(tache.code,listT)
-        listT[k].tabIndice.append(k)
+        #listT[k].tabIndice.append(k)
+        print(k,i)
     
     # partie persones
-    perso = person(fichierEx[i,5],fichierEx[i,6],fichierEx[i,7])
+    lch = zeros(len(fichierEx))
+    perso = person(fichierEx[i][5],fichierEx[i][6],lch,fichierEx[i][7])
     
-    if (searchPerson(fichierEx[i,5],fichierEx[i,6],listP) == -1):
+    if (searchPerson(fichierEx[i][5],fichierEx[i][6],listP) == -1):
         listP.append(perso)
-        h = i
+        h = len(listP)-1
     else:
-        h =  searchPerson(fichierEx[i,5],fichierEx[i,6],listP)
+        h =  searchPerson(fichierEx[i][5],fichierEx[i][6],listP)
         
-    listP[h].
-    
-    """
-    activity = acti(acticsv[i][0],acticsv[i][1],acticsv[i][2])
-    actis.append(activity)
-    """
-    
-#############Constante
-Nbact = len(actis)
-#############
+    listP[h].lch[k]= 1
+    if (i == 200):
+        print(h,k)
+   
+
+for i in range(len(listP)):
+    listP[i].lch = listP[i].lch[:len(listT)]
 
 
 
-        
-#importation de l'excel du choix des personnes
+    
 
-os.chdir("C:/Users/Ahmed/Desktop/Projetpreforum")
-cr = csv.reader(open("persons.csv","r"))
-
-percsv=[]
-for row in cr :
-    percsv.append(row)
-    
-persons=[]
-    
-for i in range(len(percsv)):
-    list = zeros(Nbact)
-    for j in range(2,len(percsv[i])):
-        indice = searchacti(percsv[i][j],actis)
-        list[indice]=1
-    personne = person(percsv[i][0],percsv[i][1],list)
-    persons.append(personne)
-    
-print("liste de personnes et d'activités initialisée")
 
 ################################################
 
@@ -299,3 +301,8 @@ for i in range(10):
 #INCORPORER TEMPS 
 """
 
+#######Pour le reste :
+"""
+our chaque choix, affecter la ligne dans l'excel correspondante, si e choix refusé, supprimer tout simplement la ligne 
+
+"""
