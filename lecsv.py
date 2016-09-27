@@ -5,20 +5,41 @@ import random
 
 
 class person(object):
-    def __init__(self,name,lastname,lch):
+    #temps à mettre ici
+    def __init__(self,name,lastname,promo):
         self.name = name
         self.ladtname = lastname
-        self.lch = lch
+########### MODIFICATION IMPORTANTE, LCH RENFERME LES INDICES DES TACHES CHOSIIES ET NON PLUS DES 001100// PAS FORCEMENT
+        self.lch = []
         self.lres = zeros(len(lch))
+        self.promo = promo
 
         
 class acti(object):
-    def __init__(self,code,type,capacity):
+    def __init__(self,entreprise,intNom,intPrenom,creneau,type,capacity):
         self.type = type
-        self.code = code
+        self.entreprise = entreprise
+        self.intNom = intNom
+        self.intPrenom = intPrenom
+        self.creneau = self.creneau
+        self.tabIndice= []
+        
+        #self.code = code
         self.capacity = capacity
         self.listPrincipale = []
         self.listAttente = []
+        self.tabIndice = tabIndice
+        
+    def genereCode(self):
+        #generation de code
+        code = self.entreprise[0]+self.entreprise[1]+self.intNom[0]+self.intNom[1]+self.intPrenom[0]
+        #partie créneau
+        cre = stringToList(self.creneau)
+        i = cre.index(":")
+        code = code + cre[i-2]+cre[i-1]+cre[i+1]+cre[i+2]
+        i = cre.index("(")
+        code = code + cre[i+1] + cre[i+2]
+        self.code = code
         
         
 class solver(object):
@@ -106,16 +127,30 @@ class solver(object):
             return 0
             
         
-
+def stringToList(string):
+    r = []
+    for i in range(len(string)):
+        r.append(string[i])
+    
+    return r
+    
 
 
 def searchacti(code,actis):
-    k = 0
+    k = -1
     for i in range (len(actis)):
         if code == actis[i].code:
             k = i
     return k
     
+def searchPerson(name,lastname,personnes):
+    k = -1
+    for i in range(len(personnes)):
+        if (name == personnes[i].name):
+            if (lastname == personnes[i].lastname):
+                k = i
+    return k
+        
 def zeros(k):
     t = []
     for i in range(k):
@@ -125,27 +160,68 @@ def zeros(k):
 
 #structure provisoire du programme
 
-"""
+
 
 #################PARTIE LECTURE DU FICHIER EXCEL
+
+
+"""
+les actis et les personnes sur un seul et même excel
+colonnes pour actis : nom entreprise / nom et prénom de l'entreprise / créneau / Dpp
+nomenclature pour les actis : 
+Colonnes pour les personnes : Etuduant Nom / Etudiant prénom / Etudiant promo / Date et heure du Shotgun / numero de tel
+
+"""
+
+
 
 
 #importation de l'excel avec les actis
 
 os.chdir("C:/Users/Ahmed/Desktop/Projetpreforum")
-cr = csv.reader(open("actis.csv","r"))
+cr = csv.reader(open("export_2015.csv","r"))
 
-acticsv = []
+fichierEx = []
 
-percsv=[]
+types = ["Discussion projet professionnel","Correction de CV en Français","Correction de CV en Anglais","Simulation d'entretien en Français","Correction de lettre de motivation","Simulation d'entretien en Anglais"]
+
+
+
 for row in cr :
-    acticsv.append(row)
+    fichierEx.append(row)
     
-actis = []
+listT = []
+listP = []
 
-for i in range(len(acticsv)):
+
+for i in range(1,len(fichierEx)):
+    
+    #d'abord une nomenclature ++ ajout dans la classse d'un tableau avec les lignes de l'activité ++ liste de tute les nomenclatures , risque de doublon ? 
+    tache = acti[fichierEx[i,0],fichierEx[i,1],fichierEx[i,2],fichierEx[i,3],type.index(fichierEx[i,4]),1) ### capacité provisoire !!
+    tache.genereCode()
+    
+    if (searchacti(tache.code,listT) == -1):
+        k = i
+        listT.append(tache)
+    else:
+        k = searchacti(tache.code,listT)
+        listT[k].tabIndice.append(k)
+    
+    # partie persones
+    perso = person(fichierEx[i,5],fichierEx[i,6],fichierEx[i,7])
+    
+    if (searchPerson(fichierEx[i,5],fichierEx[i,6],listP) == -1):
+        listP.append(perso)
+        h = i
+    else:
+        h =  searchPerson(fichierEx[i,5],fichierEx[i,6],listP)
+        
+    listP[h].
+    
+    """
     activity = acti(acticsv[i][0],acticsv[i][1],acticsv[i][2])
     actis.append(activity)
+    """
     
 #############Constante
 Nbact = len(actis)
@@ -175,8 +251,9 @@ for i in range(len(percsv)):
     
 print("liste de personnes et d'activités initialisée")
 
-"""
+################################################
 
+"""
 mat = [[10,5,2],[5,10,2],[5,2,10]]
 
 alph = ["a","b","c","d","e","f","g","h","i"]
@@ -219,6 +296,6 @@ for i in range(10):
 #pourcentage de personnes ? 
 
 #PROGRAMME CORRECTEMENT DEBUGUE
-    
-
+#INCORPORER TEMPS 
+"""
 
