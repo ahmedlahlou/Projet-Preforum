@@ -11,6 +11,7 @@ class person(object):
         self.lastname = lastname
 ########### MODIFICATION IMPORTANTE, LCH RENFERME LES INDICES DES TACHES CHOSIIES ET NON PLUS DES 001100// PAS FORCEMENT
         self.lch = lch
+        self.lchIndice = zeros(len(lch))
         self.lres = zeros(len(lch))
         self.promo = promo
 
@@ -170,6 +171,28 @@ def separate(list):
             
     return res
         
+def writeNewCsv(listP,fichier):
+    lignes = []
+    for i in range len(listP):
+        for k in range(len(listP[i].lres)):
+            if lres[k] == 1:
+                lignes.append(lchIndice[k])
+    
+    read = csv.reader(open(fichier,"r"))
+    fichierExc = []
+    
+    for row in read : 
+        fichierExc.append(row)
+    c = csv.writer(open("fichierFinal.csv", "w"))
+    
+    c.writerow(fichierExc[0])
+    
+    for i in range(1, len(fichierExc) ):
+        for k in range( len(lignes) ):
+            if i == lignes[k] :
+                c.writerow(fichierExc[i -1])
+    
+    
 
 #structure provisoire du programme
 
@@ -241,12 +264,15 @@ for i in range(1,len(fichierEx)):
         h =  searchPerson(fichierEx[i][5],fichierEx[i][6],listP)
         
     listP[h].lch[k]= 1
+    listP[h].lchIndice[k] = i +1
     if (i == 200):
         print(h,k)
    
 
 for i in range(len(listP)):
     listP[i].lch = listP[i].lch[:len(listT)]
+    listP[i].lchIndice = listP[i].lchIndice[:len(listT)]
+    listP[i].lres = listP[i].lres[:len(listT)]
 
 
 
